@@ -13,12 +13,16 @@ export class CategoryService {
   constructor(private http: HttpClient) { }
 
   addCategory(model: AddcategoryRequest): Observable<any> {
-    return this.http.post<any>(`${environment.apiBaseUrl}/api/Categories/`, model);
+    return this.http.post<any>('https://localhost:7226/api/Categories', model);
   }
 
+
   getAllCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${environment.apiBaseUrl}/api/Categories`);
+    return this.http.get<Category[]>('https://localhost:7296/api/Categories');
   }
+  // getAllCategories(): Observable<Category[]> {
+  //   return this.http.get<Category[]>(`${environment.apiBaseUrl}/api/Categories/`);
+  // }
 
 
 }
