@@ -1,4 +1,4 @@
-//import { Category } from "../../models/category.model";
+import { Category } from "../../models/category.model";
 
 export interface BlogPost {
   id: string;
@@ -10,5 +10,5 @@ export interface BlogPost {
   author: string;
   publishedDate: Date;
   isVisible: boolean;
-  //categories: Category[];
+  categories: Category[];
 }
