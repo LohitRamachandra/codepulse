@@ -1,22 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AddBlogPost } from '../models/add-blog-post.model';
 import { BlogPostService } from '../services/blog-post.service';
 import { Router } from '@angular/router';
 import { CategoryService } from '../../services/category.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Category } from '../../models/category.model';
+import { ImagesService } from 'src/app/shared/components/services/images.service';
 
 @Component({
   selector: 'app-add-blogpost',
   templateUrl: './add-blogpost.component.html',
   styleUrls: ['./add-blogpost.component.css']
 })
-export class AddBlogpostComponent implements OnInit {
+export class AddBlogpostComponent implements OnInit, OnDestroy {
+
   model: AddBlogPost;
   categories$?: Observable<Category[]>;
+  isImageSelectorVisible: boolean = false;
+  imageSelectorSusbscription?: Subscription;
+
+
   constructor(private bloPostService: BlogPostService,
               private router: Router,
-              private categoryService: CategoryService) {
+              private categoryService: CategoryService,
+              private imageService : ImagesService) {
 
     this.model = {
       title: '',
@@ -29,6 +36,9 @@ export class AddBlogpostComponent implements OnInit {
       publishedDate: new Date(),
       categories: []
     }
+  }
+  ngOnDestroy(): void {
+    this.imageSelectorSusbscription?.unsubscribe();
   }
 
   onFormSubmit(): void{
@@ -44,6 +54,22 @@ export class AddBlogpostComponent implements OnInit {
 
   ngOnInit(): void {
     this.categories$ = this.categoryService.getAllCategories();
+
+    this.imageSelectorSusbscription = this.imageService.onSelectImage()
+      .subscribe({
+        next: (selectedImage) => {
+          this.model.featuredImageUrl = selectedImage.url;
+          this.closeImageSelector();
+      }
+    })
+  }
+
+  openImageSelector(): void{
+    this.isImageSelectorVisible = true;
+  }
+
+  closeImageSelector(): void{
+    this.isImageSelectorVisible = false;
   }
 
 }
