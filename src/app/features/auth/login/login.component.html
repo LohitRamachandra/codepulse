@@ -9,10 +9,11 @@
         </div>
         <div class="mt-3">
           <label for="password" class="form-label">Password</label>
-          <input type="text" class="form-control" id="password" name="password" [(ngModel)]="model.password">
+          <input type="password" class="form-control" id="password" name="password" [(ngModel)]="model.password">
         </div>
+        <div *ngIf="errorMessage" class="mt-3 text-danger">{{ errorMessage }}</div>
         <div class="mt-3">
-          <button type="submit" class="btn btn-primary">Lohin</button>
+          <button type="submit" class="btn btn-primary">Login</button>
         </div>
       </form>
     </div>
