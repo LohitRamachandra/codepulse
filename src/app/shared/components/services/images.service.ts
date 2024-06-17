@@ -8,10 +8,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ImagesService {
-
   selectedImage: BehaviorSubject<BlogImage> = new BehaviorSubject<BlogImage>({
     id: '',
-    fileExtension: '',
+    fileExtenstion: '',
     fileName: '',
     title: '',
     url: ''
@@ -19,19 +18,18 @@ export class ImagesService {
 
   constructor(private http: HttpClient) { }
 
-
-
   getAllImages(): Observable<BlogImage[]> {
     return this.http.get<BlogImage[]>(`${environment.apiBaseUrl}/api/images`);
   }
 
-  uploadImage(file: File, fileName: string, title: string): Observable<BlogImage>{
-    const formdata = new FormData();
-    formdata.append('file', file);
-    formdata.append('fileName', fileName);
-    formdata.append('title', title);
 
-    return this.http.post<BlogImage>(`${environment.apiBaseUrl}/api/images`, formdata);
+  uploadImage(file: File, fileName: string, title: string): Observable<BlogImage> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('fileName', fileName);
+    formData.append('title', title);
+
+    return this.http.post<BlogImage>(`${environment.apiBaseUrl}/api/images`, formData);
   }
 
   selectImage(image: BlogImage): void {
@@ -39,6 +37,7 @@ export class ImagesService {
   }
 
   onSelectImage(): Observable<BlogImage> {
-    return this.selectedImage.asObservable();
+    return this.selectedImage.asObservable()
   }
+
 }

@@ -13,10 +13,10 @@ import { UpdateCategoryRequest } from '../models/update-category-request.model';
 export class UpdateCategoryComponent implements OnInit, OnDestroy  {
 
 
-  category?: Category;
   id: string | null = null;
-  paramsSubscription?:Subscription;
+  paramsSubscription?: Subscription;
   editCategorySubscription?: Subscription;
+  category?: Category;
 
 
   constructor(private route: ActivatedRoute,
@@ -43,31 +43,32 @@ export class UpdateCategoryComponent implements OnInit, OnDestroy  {
     });
   }
 
-  onFormSubmit() : void{
+ onFormSubmit(): void {
     const updateCategoryRequest: UpdateCategoryRequest = {
       name: this.category?.name ?? '',
       urlHandle: this.category?.urlHandle ?? ''
     };
 
-    if(this.id)
-    {
+    // pass this object to service
+   if (this.id) {
+
+     console.log(this.id);
+     console.log(updateCategoryRequest);
       this.editCategorySubscription = this.categoryService.updateCategory(this.id, updateCategoryRequest)
-       .subscribe({
-        next: (respone) => {
-          console.log(respone);
+      .subscribe({
+        next: (response) => {
           this.router.navigateByUrl('/admin/categories');
         }
-       });
+      });
+
     }
   }
 
-  onDelete() : void{
-    if(this.id)
-    {
+  onDelete(): void {
+    if (this.id) {
       this.categoryService.deleteCategory(this.id)
       .subscribe({
-        next: (response) =>
-        {
+        next: (response) => {
           this.router.navigateByUrl('/admin/categories');
         }
       })

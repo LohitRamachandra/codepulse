@@ -1,52 +1,67 @@
 import { Injectable } from '@angular/core';
 import { AddCategoryRequest } from '../models/add-category-request.model';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Category } from '../models/category.model';
 import { environment } from 'src/environments/environment';
 import { UpdateCategoryRequest } from '../models/update-category-request.model';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
 
-  private apiUrl: string  = "https://localhost:7296/api/";
-  //private headers: HttpHeaders;
+  constructor(private http: HttpClient,
+    private cookieService: CookieService) { }
 
-  constructor(private http: HttpClient) {
-    //this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
+  getAllCategories(
+    query?: string, sortBy?: string, sortDirection?: string,
+    pageNumber?: number, pageSize?: number): Observable<Category[]> {
+    let params = new HttpParams();
+
+    if (query) {
+      params = params.set('query', query)
+    }
+
+    if (sortBy) {
+      params = params.set('sortBy', sortBy)
+    }
+
+    if (sortDirection) {
+      params = params.set('sortDirection', sortDirection)
+    }
+
+    if (pageNumber) {
+      params = params.set('pageNumber', pageNumber)
+    }
+
+    if (pageSize) {
+      params = params.set('pageSize', pageSize)
+    }
+
+    return this.http.get<Category[]>(`${environment.apiBaseUrl}/api/categories`, {
+      params: params
+    });
   }
 
-  addCategory(model: AddCategoryRequest): Observable<any> {
-    return this.http.post<any>('https://localhost:7296/api/Categories', model);
+  getCategoryById(id: string): Observable<Category> {
+    return this.http.get<Category>(`${environment.apiBaseUrl}/api/categories/${id}`);
   }
 
-
-  getAllCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>('https://localhost:7296/api/Categories');
-  }
-  // getAllCategories(): Observable<Category[]> {
-  //   return this.http.get<Category[]>(`${environment.apiBaseUrl}/api/Categories/`);
-  // }
-
-  // getCategortyById(id:string): Observable<Category>{
-  //   // return this.http.get<Category>(`${environment.apiBaseUrl}/api/categories/${id}`);
-  //   return this.http.get<Category>('https://localhost:7296/api/Categories/'+{id}+'');
-  // }
-
-  getCategoryById(id: string): Observable<Category>{
-    // return this.http.get<Category>(`${environment.apiBaseUrl}/api/categories/${id}`);
-    return this.http.get<Category>(this.apiUrl+'Categories/'+id);
+  getCategoryCount(): Observable<number> {
+    return this.http.get<number>(`${environment.apiBaseUrl}/api/categories/count`);
   }
 
-  updateCategory(id: string, updateCategoryRequest: UpdateCategoryRequest) : Observable<Category>
-  {
-    return this.http.put<Category>(this.apiUrl+'Categories/'+id, updateCategoryRequest);
+  addCategory(model: AddCategoryRequest): Observable<void> {
+    return this.http.post<void>(`${environment.apiBaseUrl}/api/categories?addAuth=true`, model);
   }
 
-  deleteCategory(id: string) : Observable<Category> {
-    return this.http.delete<Category>(`${environment.apiBaseUrl}/api/Categories/${id}`);
+  updateCategory(id: string, updateCategoryRequest: UpdateCategoryRequest): Observable<Category> {
+    return this.http.put<Category>(`${environment.apiBaseUrl}/api/categories/${id}?addAuth=true`, updateCategoryRequest);
   }
 
+  deleteCategory(id: string): Observable<Category> {
+    return this.http.delete<Category>(`${environment.apiBaseUrl}/api/categories/${id}?addAuth=true`)
+  }
 }

@@ -50,9 +50,9 @@ export class EditBlogpostComponent implements OnInit, OnDestroy{
               this.model = resposne;
               this.selectedCategories = resposne.categories.map(x => x.id);
             }
-          });
+            });
+          ;
         }
-
         this.imageSelectSubscription = this.imageService.onSelectImage()
           .subscribe({
             next: (response) => {

@@ -9,22 +9,22 @@ import { Subscription } from 'rxjs';
   templateUrl: './add-category.component.html',
   styleUrls: ['./add-category.component.css']
 })
-export class AddCategoryComponent implements OnDestroy{
+export class AddCategoryComponent implements OnDestroy {
 
   model: AddCategoryRequest;
-  private addCategorySubscription?: Subscription;
+  private addCategorySubscribtion?: Subscription;
 
   constructor(private categoryService: CategoryService,
-
-    private router: Router){
+    private router: Router) {
     this.model = {
       name: '',
       urlHandle: ''
-    }
+    };
   }
 
-  onFormSubmit(){
-    this.addCategorySubscription = this.categoryService.addCategory(this.model)
+
+  onFormSubmit() {
+    this.addCategorySubscribtion = this.categoryService.addCategory(this.model)
     .subscribe({
       next: (response) => {
         this.router.navigateByUrl('/admin/categories');
@@ -33,8 +33,7 @@ export class AddCategoryComponent implements OnDestroy{
   }
 
   ngOnDestroy(): void {
-    this.addCategorySubscription?.unsubscribe();
+    this.addCategorySubscribtion?.unsubscribe();
   }
-
 
 }
